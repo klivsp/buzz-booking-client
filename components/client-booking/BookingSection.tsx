@@ -518,7 +518,7 @@ const BookingSection = () => {
             <p className="mt-5 text-3xl font-medium text-white sm:text-4xl">The only platform to book directly with the Hosts</p>
             <button
               type="button"
-              className="mt-8 inline-flex h-12 min-w-[340px] items-center justify-center rounded-full bg-white px-12 text-sm font-semibold tracking-wide text-slate-900 shadow-md transition hover:bg-slate-100 sm:h-14 sm:min-w-[620px]"
+              className="mt-8 inline-flex h-12 min-w-[340px]  cursor-pointer items-center justify-center rounded-full bg-white px-12 text-sm font-semibold tracking-wide text-slate-900 shadow-md transition hover:bg-slate-100 sm:h-14 sm:min-w-[620px]"
             >
               REGISTER YOUR PROPERTY
             </button>
