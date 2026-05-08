@@ -30,7 +30,7 @@ const ClientBookingPages = () => {
         <section
             className="relative flex min-h-screen items-center overflow-hidden text-white"
             style={{
-              backgroundImage: `url(${bookingHome})`,
+              backgroundImage: `url(${bookingHome.src})`,
               backgroundPosition: 'center',
               backgroundSize: 'cover',
             }}

@@ -5,8 +5,8 @@ import italianFlag from '@/public/images/it.svg';
 import { cn } from '@/lib/utils';
 
 const languages = [
-  { code: 'IT', label: 'Italiano', flag: italianFlag },
-  { code: 'EN', label: 'English', flag: englishFlag },
+  { code: 'IT', label: 'Italiano', flag: italianFlag.src },
+  { code: 'EN', label: 'English', flag: englishFlag.src },
 ] as const;
 
 type BookingLanguageSelectorProps = {

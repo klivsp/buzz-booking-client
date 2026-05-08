@@ -255,9 +255,9 @@ type SocialShareItem = {
 };
 
 const socialShareItems: SocialShareItem[] = [
-  { id: 'email', label: 'E-mail', short: '@', bgClass: 'bg-teal-600', iconSrc: emailIcon, iconAlt: 'E-mail icon' },
-  { id: 'facebook', label: 'Facebook', short: 'f', bgClass: 'bg-blue-700', iconSrc: facebookIcon, iconAlt: 'Facebook icon' },
-  { id: 'google', label: 'Google', short: 'g', bgClass: 'bg-white', iconSrc: googleIcon, iconAlt: 'Google icon' },
+  { id: 'email', label: 'E-mail', short: '@', bgClass: 'bg-teal-600', iconSrc: emailIcon.src, iconAlt: 'E-mail icon' },
+  { id: 'facebook', label: 'Facebook', short: 'f', bgClass: 'bg-blue-700', iconSrc: facebookIcon.src, iconAlt: 'Facebook icon' },
+  { id: 'google', label: 'Google', short: 'g', bgClass: 'bg-white', iconSrc: googleIcon.src, iconAlt: 'Google icon' },
   { id: 'twitter', label: 'Twitter', short: 't', bgClass: 'bg-sky-500' },
   { id: 'telegram', label: 'Telegram', short: 'tg', bgClass: 'bg-sky-600' },
   { id: 'skype', label: 'Skype', short: 's', bgClass: 'bg-cyan-500' },

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import ManageClientReservation from '@/components/client-booking/auth-client-booking/ManageClientReservation';
 import ClientBookingRegister from '@/components/client-booking/auth-client-booking/ClientBookingRegister';
@@ -66,21 +66,21 @@ const loginOptions: LoginOptionProps[] = [
     id: 'facebook',
     label: 'Login with Facebook',
     className: 'bg-[#3b5998] text-white',
-    iconSrc: facebookIcon,
+    iconSrc: facebookIcon.src,
     iconAlt: 'Facebook',
   },
   {
     id: 'google',
     label: 'Login with Google',
     className: 'border border-slate-300 bg-white text-slate-900',
-    iconSrc: googleIcon,
+    iconSrc: googleIcon.src,
     iconAlt: 'Google',
   },
   {
     id: 'email',
     label: 'Login with your e-mail',
     className: 'bg-emerald-500 text-white',
-    iconSrc: emailIcon,
+    iconSrc: emailIcon.src,
     iconAlt: 'Email',
   },
   {
@@ -172,6 +172,7 @@ const ClientBookingLogin = ({ open, onOpenChange, initialView = 'options' }: Cli
             className="w-[88vw] max-w-sm gap-0 overflow-hidden rounded-md border-slate-200 bg-[#ececec] p-0 sm:h-[88vh] sm:w-[93vw] sm:max-w-4xl"
             hideDefaultClose
         >
+          <DialogTitle className="sr-only">Client login</DialogTitle>
           <ScrollArea className="max-h-[85vh] sm:max-h-[88vh]">
             <div className="sticky top-0 z-20 flex items-center justify-start border-b border-slate-300/60 bg-[#ececec] pb-2 pl-3 pr-6 pt-2 sm:px-8 sm:pt-3">
               <h2 className="text-4xl font-bold text-emerald-700 max-sm:text-4xl">PMP Platform</h2>
