@@ -23,10 +23,25 @@ const ClientSpecificBooking = () => {
     };
 
     useEffect(() => {
-        if (searchParams.get('scrollTo') === 'hotels') {
-            scrollToHotels();
-            router.replace(pathname);
+        if (searchParams.get('scrollTo') !== 'hotels') {
+            return;
         }
+
+        const runScroll = () => {
+            hotelsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(runScroll);
+        });
+
+        const clearQueryTimer = window.setTimeout(() => {
+            router.replace(pathname, { scroll: false });
+        }, 550);
+
+        return () => {
+            window.clearTimeout(clearQueryTimer);
+        };
     }, [pathname, router, searchParams]);
 
     const filteredStays = useMemo(() => {
