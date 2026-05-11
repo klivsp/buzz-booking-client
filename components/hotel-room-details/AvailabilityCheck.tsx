@@ -44,7 +44,15 @@ export default function AvailabilityChecker() {
                                 <span>Select dates</span>
                             )}
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        <PopoverContent
+                            className="w-auto p-0"
+                            align="start"
+                            onInteractOutside={(event) => {
+                                if (date?.from && !date?.to) {
+                                    event.preventDefault();
+                                }
+                            }}
+                        >
                             <Calendar
                                 mode="range"
                                 defaultMonth={date?.from}

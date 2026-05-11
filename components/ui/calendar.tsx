@@ -4,10 +4,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { DayPicker, type DropdownProps } from 'react-day-picker';
+import 'react-day-picker/style.css';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+    const rangeDefaults =
+        props.mode === 'range' && props.min === undefined ? ({ min: 1 } as const satisfies Partial<CalendarProps>) : {};
+
     const CustomDropdown = React.useCallback(({ value, onChange, options }: DropdownProps) => {
         const selected = options?.find((option) => option.value === value);
 
@@ -25,8 +29,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
                 </SelectTrigger>
                 <SelectContent position="popper">
                     <ScrollArea className="h-80">
-                        {(options ?? []).map((option, id: number) => (
-                            <SelectItem key={`${option.value}-${id}`} value={option.value?.toString() ?? ''}>
+                        {(options ?? []).map((option, index) => (
+                            <SelectItem key={`${option.value}-${index}`} value={option.value?.toString() ?? ''}>
                                 {option.label}
                             </SelectItem>
                         ))}
@@ -69,13 +73,17 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
                 hidden: 'invisible',
                 ...classNames,
             }}
-            components={{
-                Dropdown: CustomDropdown,
-            }}
             captionLayout="dropdown"
             startMonth={new Date(1990, 0)}
             endMonth={new Date(new Date().getFullYear() + 10, 11)}
+            {...rangeDefaults}
             {...props}
+            components={{
+                ...(typeof props === 'object' && props && 'components' in props && props.components
+                    ? props.components
+                    : {}),
+                Dropdown: CustomDropdown,
+            }}
         />
     );
 }
