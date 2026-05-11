@@ -8,6 +8,9 @@ import { DayPicker, type DropdownProps } from 'react-day-picker';
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+    const rangeDayPickerDefaults =
+        props.mode === 'range' && props.min === undefined ? ({ min: 1 } as const satisfies Partial<CalendarProps>) : {};
+
     const CustomDropdown = React.useCallback(({ value, onChange, options }: DropdownProps) => {
         const selected = options?.find((option) => option.value === value);
 
@@ -75,6 +78,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
             captionLayout="dropdown"
             startMonth={new Date(1990, 0)}
             endMonth={new Date(new Date().getFullYear() + 10, 11)}
+            {...rangeDayPickerDefaults}
             {...props}
         />
     );

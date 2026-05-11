@@ -163,7 +163,15 @@ const BookingSearchBar = () => {
                   </div>
                 </button>
               </PopoverTrigger>
-              <PopoverContent align="start" className="w-auto p-0">
+              <PopoverContent
+                align="start"
+                className="w-auto p-0"
+                onInteractOutside={(event) => {
+                  if (stayDateRange?.from && !stayDateRange?.to) {
+                    event.preventDefault();
+                  }
+                }}
+              >
                 <div className="border-b border-slate-200 px-4 py-3">
                   <p className="text-lg font-semibold text-slate-900">Select arrival date</p>
                 </div>
