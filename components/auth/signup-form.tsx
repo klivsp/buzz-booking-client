@@ -16,6 +16,9 @@ import {
 } from "@/common/form-elements/signup-items";
 import { useSignupMutation } from "@/redux/services/authApi";
 import useAuth from "@/hooks/use-auth";
+import { useEffect } from "react";
+import { useAppDispatch } from "@/redux/store";
+import { setPendingApproval } from "@/redux/slices/authSlice";
 
 export type SignupFormProps = {
   /**
@@ -36,8 +39,10 @@ export default function SignupForm({
   onSuccess,
 }: SignupFormProps) {
   const { login } = useAuth();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [signup, { isLoading }] = useSignupMutation();
+  const [showApprovalMessage, setShowApprovalMessage] = React.useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupFormSchema),
@@ -63,9 +68,15 @@ export default function SignupForm({
     form.clearErrors("root");
     try {
       const tokens = await signup(values).unwrap();
-      login(tokens.accessToken, tokens.refreshToken);
-      onSuccess?.(values);
-      router.replace("/dashboard");
+      if (values.propertyOwner) {
+        dispatch(setPendingApproval(true));
+        setShowApprovalMessage(true);
+        // Don't login or redirect for property owners
+      } else {
+        login(tokens.accessToken, tokens.refreshToken);
+        onSuccess?.(values);
+        router.replace("/dashboard");
+      }
     } catch (error: unknown) {
       let message = "Sign up failed. Please try again.";
       if (
@@ -90,33 +101,44 @@ export default function SignupForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6"
-        noValidate
-      >
-        <FormRender<SignupFormValues> {...formConfig} />
-
-        {form.formState.errors.root?.message ? (
-          <p className="text-sm text-destructive" role="alert">
-            {form.formState.errors.root.message}
+      {showApprovalMessage ? (
+        <div className="space-y-4 text-center">
+          <p className="text-muted-foreground">
+            Your account has been created successfully. Please wait for approval before accessing the dashboard.
           </p>
-        ) : null}
+          <Button onClick={() => setShowApprovalMessage(false)} variant="outline">
+            Close
+          </Button>
+        </div>
+      ) : (
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6"
+          noValidate
+        >
+          <FormRender<SignupFormValues> {...formConfig} />
 
-        <Button type="submit" disabled={isLoading} className="inline-flex w-full items-center justify-center gap-2">
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating account…
-            </>
-          ) : (
-            <>
-              <UserPlus className="mr-2 h-4 w-4" />
-              Sign up
-            </>
-          )}
-        </Button>
-      </form>
+          {form.formState.errors.root?.message ? (
+            <p className="text-sm text-destructive" role="alert">
+              {form.formState.errors.root.message}
+            </p>
+          ) : null}
+
+          <Button type="submit" disabled={isLoading} className="inline-flex w-full items-center justify-center gap-2">
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating account…
+              </>
+            ) : (
+              <>
+                <UserPlus className="mr-2 h-4 w-4" />
+                Sign up
+              </>
+            )}
+          </Button>
+        </form>
+      )}
     </Form>
   );
 }

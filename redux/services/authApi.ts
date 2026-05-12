@@ -16,7 +16,7 @@ export type AuthTokens = {
 };
 
 /**
- * Requests use `NEXT_PUBLIC_API_BASE_URL` (default `https://localhost:3000/api`).
+ * Requests use `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:5172/api`).
  * Expected paths: `/auth/login`, `/auth/signup`, `/auth/logout`, `/auth/refresh`.
  */
 export const authApi = createApi({

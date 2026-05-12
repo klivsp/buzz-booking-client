@@ -3,11 +3,13 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 export type AuthState = {
   accessToken: string | null;
   refreshToken: string | null;
+  pendingApproval: boolean;
 };
 
 const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
+  pendingApproval: false,
 };
 
 const authSlice = createSlice({
@@ -24,6 +26,7 @@ const authSlice = createSlice({
     clearCredentials(state) {
       state.accessToken = null;
       state.refreshToken = null;
+      state.pendingApproval = false;
     },
     hydrateFromStorage(
       state,
@@ -34,10 +37,14 @@ const authSlice = createSlice({
     ) {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      state.pendingApproval = false; // Assume not pending on hydrate
+    },
+    setPendingApproval(state, action: PayloadAction<boolean>) {
+      state.pendingApproval = action.payload;
     },
   },
 });
 
-export const { setCredentials, clearCredentials, hydrateFromStorage } =
+export const { setCredentials, clearCredentials, hydrateFromStorage, setPendingApproval } =
   authSlice.actions;
 export default authSlice.reducer;

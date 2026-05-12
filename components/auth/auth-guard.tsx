@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/use-auth";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, pendingApproval } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -25,6 +25,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!isAuthenticated) {
     return null;
+  }
+
+  if (pendingApproval) {
+    return (
+      <div className="flex min-h-[50vh] flex-1 items-center justify-center text-muted-foreground">
+        Wait for approval
+      </div>
+    );
   }
 
   return <>{children}</>;

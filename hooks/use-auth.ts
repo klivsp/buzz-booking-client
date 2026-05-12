@@ -6,6 +6,7 @@ import {
   clearCredentials,
   hydrateFromStorage,
   setCredentials,
+  setPendingApproval,
 } from "@/redux/slices/authSlice";
 import {
   useLogoutMutation,
@@ -21,6 +22,7 @@ import {
 export default function useAuth() {
   const dispatch = useAppDispatch();
   const tokens = useAppSelector((s) => s.auth);
+  const pendingApproval = useAppSelector((s) => s.auth.pendingApproval);
   const [loading, setLoading] = useState(true);
   const [refreshTokenMutation] = useRefreshTokenMutation();
   const [logoutMutation] = useLogoutMutation();
@@ -103,5 +105,6 @@ export default function useAuth() {
     login,
     logout,
     refreshAccessToken,
+    pendingApproval,
   };
 }
