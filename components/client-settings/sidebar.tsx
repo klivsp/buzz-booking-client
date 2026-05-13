@@ -1,100 +1,86 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-// Added LogOut and LifeBuoy (Help) icons
-import { LayoutDashboard, Building2, CalendarDays, BarChart3, MessageSquare, Settings, LifeBuoy, LogOut, Menu, X } from 'lucide-react';
+import {
+  LayoutDashboard, Building2, CalendarDays,
+  BarChart3, MessageSquare, Settings, LogOut
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
-  { id: 'properties', icon: Building2, label: 'Properties', href: '/properties' },
-  { id: 'bookings', icon: CalendarDays, label: 'Bookings', href: '/bookings' },
-  { id: 'analytics', icon: BarChart3, label: 'Analytics', href: '/analytics' },
-  { id: 'messages', icon: MessageSquare, label: 'Messages', href: '/messages' },
-  { id: 'settings', icon: Settings, label: 'Settings', href: '/settings' },
+  { id: 'properties', icon: Building2,      label: 'Properties', href: '/properties' },
+  { id: 'bookings',   icon: CalendarDays,   label: 'Bookings',   href: '/bookings' },
+  { id: 'analytics',  icon: BarChart3,      label: 'Analytics',  href: '/analytics' },
+  { id: 'messages',   icon: MessageSquare,  label: 'Messages',   href: '/messages' },
+  { id: 'settings',   icon: Settings,       label: 'Settings',   href: '/settings' },
 ];
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname();
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
-  const handleLogout = () => {
-    // Logic for clearing Redux state / Auth tokens
-    console.log("Logging out...");
+  // Helper to determine if the link is active
+  const checkActive = (href: string) => {
+    if (href === '/dashboard') return pathname === '/dashboard';
+    return pathname.startsWith(href);
   };
 
   return (
-    <>
-      {/* Mobile Toggle Button */}
-      <button 
-        onClick={toggleSidebar}
-        className="md:hidden fixed top-6 left-6 z-60 p-2 glass rounded-xl shadow-lg"
-      >
-        {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-      </button>
-
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 md:hidden" onClick={toggleSidebar} />
-      )}
-
-      <aside className={cn(
-        "fixed inset-y-0 left-0 z-55 glass border-r border-glass-border flex flex-col transition-all duration-300",
-        isOpen ? "translate-x-0 w-64 p-6" : "-translate-x-full md:translate-x-0",
-        "md:sticky md:top-0 md:h-screen md:w-20 md:p-4 lg:w-64 lg:p-6"
-      )}>
-        {/* Logo Section */}
-        <div className="flex items-center gap-3 mb-10 overflow-hidden px-2">
-          <div className="w-10 h-10 bg-glass-accent rounded-xl flex items-center justify-center text-white font-black text-xl shrink-0">B</div>
-          <span className="text-xl font-extrabold text-glass-accent lg:block hidden">BuzzManager</span>
+    <aside className="flex flex-col h-full bg-white border-r p-6">
+      {/* Brand Section */}
+      <div className="flex items-center gap-3 mb-10 px-2">
+        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-200">
+          B
         </div>
-        
-        {/* Primary Navigation */}
-        <nav className="flex-1 space-y-2 overflow-y-auto scrollbar-hide">
-          {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 rounded-xl text-sm font-semibold h-12 px-3 transition-all",
-                  isActive ? "bg-white text-glass-accent shadow-sm" : "text-slate-500 hover:bg-white/40"
-                )}
-              >
-                <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "text-glass-accent" : "text-slate-400")} />
-                <span className="lg:block hidden">{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        <span className="text-xl font-extrabold tracking-tight text-slate-900">
+          Buzz<span className="text-blue-600">Manager</span>
+        </span>
+      </div>
 
-        {/* --- BOTTOM SECTION (Help & Logout) --- */}
-        <div className="pt-4 mt-4 border-t border-glass-border space-y-2">
-          {/* Help/Support Link */}
-          <Link
-            href="/support"
-            className="flex items-center gap-3 rounded-xl text-sm font-semibold h-12 px-3 text-slate-500 hover:bg-white/40 transition-all"
-          >
-            <LifeBuoy className="h-5 w-5 shrink-0 text-slate-400" />
-            <span className="lg:block hidden">Help & Support</span>
-          </Link>
+      {/* Primary Navigation */}
+      <nav className="flex-1 space-y-1">
+        {navItems.map((item) => {
+          const isActive = checkActive(item.href);
+          return (
+            <Link
+              key={item.id}
+              href={item.href}
+              onClick={onClose}
+              className={cn(
+                "flex items-center gap-3 rounded-xl text-sm font-semibold h-12 px-3 transition-all duration-200 group",
+                isActive
+                  ? "bg-blue-50 text-blue-600 shadow-sm shadow-blue-100/50"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              )}
+            >
+              <item.icon className={cn(
+                "h-5 w-5 transition-transform group-hover:scale-110",
+                isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"
+              )} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
 
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 rounded-xl text-sm font-semibold h-12 px-3 text-red-500 hover:bg-red-50/50 transition-all"
-          >
-            <LogOut className="h-5 w-5 shrink-0" />
-            <span className="lg:block hidden">Logout</span>
-          </button>
-        </div>
-      </aside>
-    </>
+      {/* Bottom Actions Section */}
+      <div className="pt-6 mt-6 border-t border-slate-100">
+        <button
+          onClick={() => {
+            /* Handle Logout Logic */
+            onClose?.();
+          }}
+          className="flex w-full items-center gap-3 rounded-xl text-sm font-semibold h-12 px-3 text-black hover:bg-red-50 transition-all duration-200 group"
+        >
+          <LogOut className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
   );
 }
