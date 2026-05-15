@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { I18nProvider } from "@/components/providers/i18n-provider";
 import { StoreProvider } from "@/components/providers/store-provider";
 import "./globals.css";
 
@@ -29,7 +30,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <I18nProvider>{children}</I18nProvider>
+        </StoreProvider>
       </body>
     </html>
   );

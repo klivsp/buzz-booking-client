@@ -1,11 +1,10 @@
-"use client";
+﻿"use client";
 
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   CalendarDays,
-  ChevronDown,
   CircleUserRound,
   LogIn,
   MapPin,
@@ -13,152 +12,13 @@ import {
   Users,
 } from "lucide-react";
 
+import { LanguageSwitcher } from "@/components/language-dropdown/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const HERO_BACKGROUND_SRC = "/bookingHome.jpg" as const;
 const HEADER_SCROLL_BLEND_MAX = 440;
 
-const FLAG_IT_SRC = "/flags/it.svg" as const;
-const FLAG_EN_SRC = "/flags/en.svg" as const;
-
-type HeroLocale = "it" | "en";
-
-function HeroLanguageDropdown({
-  locale,
-  onLocaleChange,
-  hasScrolled,
-  align = "right",
-  triggerClassName,
-}: {
-  locale: HeroLocale;
-  onLocaleChange: (v: HeroLocale) => void;
-  hasScrolled: boolean;
-  align?: "left" | "right";
-  triggerClassName?: string;
-}) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDoc = (e: MouseEvent) => {
-      if (
-        rootRef.current &&
-        !rootRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false)
-      }
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [open]);
-
-  const currentFlag = locale === "it" ? FLAG_IT_SRC : FLAG_EN_SRC;
-
-  return (
-    <div className="relative" ref={rootRef}>
-      <button
-        type="button"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-label={
-          locale === "it"
-            ? "Language: Italian. Open menu"
-            : "Language: English. Open menu"
-        }
-        className={cn(
-          "flex h-9 items-center gap-1.5 rounded-md border-0 bg-transparent px-1.5 outline-none transition focus-visible:ring-2 focus-visible:ring-offset-0",
-          hasScrolled
-            ? "text-slate-700 hover:bg-slate-100 focus-visible:ring-slate-400/50"
-            : "text-white hover:bg-white/10 focus-visible:ring-white/50",
-          triggerClassName,
-        )}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <Image
-          src={currentFlag}
-          alt=""
-          width={24}
-          height={16}
-          unoptimized
-          className="rounded-sm object-cover shadow-sm ring-1 ring-black/10"
-        />
-        <ChevronDown
-          className={cn(
-            "size-4 shrink-0 transition-transform",
-            open && "rotate-180",
-            hasScrolled ? "text-slate-700" : "text-white",
-          )}
-          strokeWidth={2}
-          aria-hidden
-        />
-      </button>
-
-      {open ? (
-        <ul
-          role="listbox"
-          aria-label="Languages"
-          className={cn(
-            "absolute top-full z-[70] mt-1.5 min-w-[11rem] overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg",
-            align === "right" ? "right-0" : "left-0",
-          )}
-        >
-          <li>
-            <button
-              type="button"
-              role="option"
-              aria-selected={locale === "it"}
-              className={cn(
-                "flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm text-slate-800 hover:bg-slate-50",
-                locale === "it" && "bg-slate-100 font-medium",
-              )}
-              onClick={() => {
-                onLocaleChange("it");
-                setOpen(false);
-              }}
-            >
-              <Image
-                src={FLAG_IT_SRC}
-                alt=""
-                width={24}
-                height={16}
-                unoptimized
-                className="rounded-sm object-cover"
-              />
-              Italiano
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              role="option"
-              aria-selected={locale === "en"}
-              className={cn(
-                "flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm text-slate-800 hover:bg-slate-50",
-                locale === "en" && "bg-slate-100 font-medium",
-              )}
-              onClick={() => {
-                onLocaleChange("en");
-                setOpen(false);
-              }}
-            >
-              <Image
-                src={FLAG_EN_SRC}
-                alt=""
-                width={24}
-                height={16}
-                unoptimized
-                className="rounded-sm object-cover"
-              />
-              English
-            </button>
-          </li>
-        </ul>
-      ) : null}
-    </div>
-  );
-}
 
 type HeroSearchFieldProps = {
   icon: ReactNode;
@@ -258,7 +118,6 @@ export function BookingHero() {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [heroLocale, setHeroLocale] = useState<HeroLocale>("it");
   const mobileNavRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -330,12 +189,7 @@ export function BookingHero() {
             </Button>
 
             <div className="hidden items-center gap-2 sm:gap-3 md:flex">
-              <HeroLanguageDropdown
-                locale={heroLocale}
-                onLocaleChange={setHeroLocale}
-                hasScrolled={hasScrolled}
-                align="right"
-              />
+              <LanguageSwitcher variant="compact" hasScrolled={hasScrolled} />
 
               <Button
                 type="button"
@@ -394,11 +248,10 @@ export function BookingHero() {
                     Language
                   </p>
                   <div className="mb-2 px-0">
-                    <HeroLanguageDropdown
-                      locale={heroLocale}
-                      onLocaleChange={setHeroLocale}
+                    <LanguageSwitcher
+                      variant="compact"
                       hasScrolled
-                      align="left"
+                      align="start"
                       triggerClassName="w-full justify-between rounded-md border border-slate-200 bg-white px-3 text-slate-800 hover:bg-slate-50"
                     />
                   </div>
