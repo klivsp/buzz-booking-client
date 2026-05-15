@@ -1,5 +1,5 @@
-import { HomeLanding } from "@/components/home/home-landing";
+import {BookingHero} from "@/components/booking-hero/booking-hero";
 
 export default function Home() {
-  return <HomeLanding />;
+  return <BookingHero />;
 }
